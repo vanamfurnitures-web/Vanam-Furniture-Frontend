@@ -136,7 +136,7 @@ export default function Header() {
       name: "Kitchen",
       icon: <FaUserAlt />,
     },
-  ];
+  ]; 
 
 
   /* =========================================================
