@@ -163,9 +163,7 @@ const categoryChange = (value) => {
 
   async function onSubmit(e) {
     e.preventDefault();
-    if (sale > price) {
-      toast.error("Selling price should be lower than the regular price");
-    } else if (!image) {
+   if (!image) {
       toast.error("You have to choose featured image!");
     } else {
       try {

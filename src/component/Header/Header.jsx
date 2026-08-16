@@ -131,6 +131,11 @@ export default function Header() {
       name: "Closet",
       icon: <FaUserAlt />,
     },
+      {
+      path: "/shop",
+      name: "Kitchen",
+      icon: <FaUserAlt />,
+    },
   ];
 
 
