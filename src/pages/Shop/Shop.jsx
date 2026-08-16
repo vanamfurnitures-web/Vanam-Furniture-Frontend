@@ -44,6 +44,11 @@ export default function Shop() {
       name: "Closet",
       // icon: <FaUserAlt />,
     },
+    {
+      path: "/shop",
+      name: "Kitchen",
+      // icon: <FaUserAlt />,
+    },
   ];
 
   const sortBY = (e) => {

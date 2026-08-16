@@ -1,199 +1,191 @@
 import React from "react";
+import { FiMoreHorizontal } from "react-icons/fi";
+
+const orders = [
+  {
+    id: "8987",
+    product: "Elegant-09",
+    units: 7,
+    date: "08 Oct 2023",
+    cost: "₹ 897",
+    status: "Completed",
+  },
+  {
+    id: "6209",
+    product: "Fortune-3",
+    units: 2,
+    date: "07 Oct 2023",
+    cost: "₹ 453",
+    status: "Completed",
+  },
+  {
+    id: "1087",
+    product: "Table-2",
+    units: 1,
+    date: "07 Oct 2023",
+    cost: "₹ 297",
+    status: "Delayed",
+  },
+  {
+    id: "8009",
+    product: "Golden-20",
+    units: 2,
+    date: "07 Oct 2023",
+    cost: "₹ 597",
+    status: "On Hold",
+  },
+  {
+    id: "3349",
+    product: "FT-09",
+    units: 3,
+    date: "06 Oct 2023",
+    cost: "₹ 530",
+    status: "Canceled",
+  },
+];
+
+function statusClass(status) {
+  switch (status) {
+    case "Completed":
+      return "bg-green-50 text-green-700";
+
+    case "Delayed":
+      return "bg-blue-50 text-blue-700";
+
+    case "On Hold":
+      return "bg-yellow-50 text-yellow-700";
+
+    case "Canceled":
+      return "bg-red-50 text-red-700";
+
+    default:
+      return "bg-gray-50 text-gray-600";
+  }
+}
 
 export default function New_order() {
   return (
-    <table className="min-w-full">
+    <table className="min-w-[850px] w-full">
+
       <thead>
-        <tr className="rounded-lg">
-          <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-            Order ID
+
+        <tr className="border-b border-gray-100 bg-[#faf8f4]">
+
+          <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+            Order
           </th>
-          <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider ">
-            Product Name
+
+          <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+            Product
           </th>
-          <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider ">
-            Unites
+
+          <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+            Units
           </th>
-          <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider ">
-            Order Date
+
+          <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+            Date
           </th>
-          <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider ">
-            Order cost
+
+          <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+            Cost
           </th>
-          <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider ">
+
+          <th className="px-5 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500">
             Status
           </th>
-          <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider ">
-            Edit
+
+          <th className="px-5 py-4 text-right text-[10px] font-semibold uppercase tracking-[0.16em] text-gray-500">
+            
           </th>
+
         </tr>
+
       </thead>
 
-      <tbody>
-        <tr>
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm font-semibold text-gray-900">8987</div>
-          </td>
+      <tbody className="divide-y divide-gray-100">
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">Elegent-09</div>
-          </td>
+        {orders.map((order) => (
+          <tr
+            key={order.id}
+            className="transition hover:bg-[#fcfaf7]"
+          >
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">7</div>
-          </td>
+            <td className="px-5 py-4">
+              <span className="text-sm font-semibold text-gray-900">
+                #{order.id}
+              </span>
+            </td>
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">8-10-23</div>
-          </td>
+            <td className="px-5 py-4">
+              <span className="text-sm text-gray-700">
+                {order.product}
+              </span>
+            </td>
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">$897</div>
-          </td>
+            <td className="px-5 py-4">
+              <span className="text-sm text-gray-600">
+                {order.units}
+              </span>
+            </td>
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900 bg-green-300 p-1 rounded-lg">Completed</div>
-          </td>
+            <td className="px-5 py-4">
+              <span className="text-sm text-gray-500">
+                {order.date}
+              </span>
+            </td>
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm font-semibold text-gray-900 flex w-full items-end justify-end cursor-pointer">:</div>
-          </td>
+            <td className="px-5 py-4">
+              <span className="text-sm font-semibold text-gray-900">
+                {order.cost}
+              </span>
+            </td>
 
-          
-        </tr>
+            <td className="px-5 py-4">
 
-        <tr>
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm font-semibold text-gray-900">6209</div>
-          </td>
+              <span
+                className={`
+                  inline-flex
+                  rounded-full
+                  px-3
+                  py-1.5
+                  text-[10px]
+                  font-semibold
+                  ${statusClass(order.status)}
+                `}
+              >
+                {order.status}
+              </span>
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">Fortune-3</div>
-          </td>
+            </td>
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">2</div>
-          </td>
+            <td className="px-5 py-4 text-right">
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">7-10-23</div>
-          </td>
+              <button
+                type="button"
+                className="
+                  flex
+                  h-8
+                  w-8
+                  items-center
+                  justify-center
+                  rounded-full
+                  text-gray-400
+                  transition
+                  hover:bg-gray-100
+                  hover:text-gray-900
+                "
+              >
+                <FiMoreHorizontal />
+              </button>
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">$453</div>
-          </td>
+            </td>
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900 bg-green-300 p-1 rounded-lg">Completed</div>
-          </td>
+          </tr>
+        ))}
 
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm font-semibold text-gray-900 flex w-full items-end justify-end cursor-pointer">:</div>
-          </td>
-
-          
-        </tr>
-
-
-        <tr>
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm font-semibold text-gray-900">1087</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">Table-2</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">1</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">7-10-23</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">$297</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900 bg-blue-300 p-1 rounded-lg flex items-center justify-center">Delayed</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm font-semibold text-gray-900 flex w-full items-end justify-end cursor-pointer">:</div>
-          </td>
-
-          
-        </tr>
-
-
-        <tr>
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm font-semibold text-gray-900">8009</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">Golden-20</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">2</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">7-10-23</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">$597</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900 bg-yellow-300 p-1 rounded-lg flex items-center justify-center">On Hold</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm font-semibold text-gray-900 flex w-full items-end justify-end cursor-pointer">:</div>
-          </td>
-
-          
-        </tr>
-
-
-
-        <tr>
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm font-semibold text-gray-900">3349</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">FT-09</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">3</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">6-10-23</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900">$530</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm text-gray-900 bg-red-300 p-1 rounded-lg flex items-center justify-center">Canceled</div>
-          </td>
-
-          <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-            <div className="text-sm font-semibold text-gray-900 flex w-full items-end justify-end cursor-pointerx">:</div>
-          </td>
-
-          
-        </tr>
       </tbody>
+
     </table>
   );
 }

@@ -52,38 +52,230 @@ console.log(item)
     
     
     if (!delvisible) return null;
-    return (
+return (
+  <div
+    id="cont"
+    onClick={handleOnChange}
+    className="
+      fixed
+      inset-0
+      z-[200]
+      flex
+      items-center
+      justify-center
+      bg-black/50
+      px-4
+      backdrop-blur-md
+    "
+  >
     <div
-        id="cont"
-        onClick={handleOnChange}
-        className="fixed z-50 inset-0 flex items-center justify-center k bg-opacity-5 backdrop-blur-sm"
-      >
-        <div className="w-5/12 p-4 bg-slate-100 rounded-lg md:p-6">
-          <h1 className="text-xl font-semibold text-center text-gray-700 md-5">
-           Are you sure to Delete Item ({item.item_name})?
-          </h1>
-  
-          
-        
-  
-            <div className="flex items-end justify-end m-3 text-center">
-              <button
-                id="close"
-                onClick={handleOnChange}
-                className="px-3 py-0 mr-4 text-lg text-white duration-150 ease-in-out bg-green-600 rounded hover:bg-green-700"
-              >
-                Close
-              </button>
-              <button
-                
-                onClick={onChange}
-                className="px-3 py-0 text-lg text-white duration-150 ease-in-out bg-red-600 rounded hover:bg-red-700"
-              >
-                Delete Item
-              </button>
-            </div>
-       
+      onClick={(e) => e.stopPropagation()}
+      className="
+        w-full
+        max-w-md
+        overflow-hidden
+        rounded-[1.75rem]
+        border
+        border-[#e5dfd6]
+        bg-[#faf9f7]
+        shadow-2xl
+      "
+    >
+
+      {/* =====================================================
+          HEADER
+      ====================================================== */}
+      <div className="bg-[#211c17] px-6 py-6 text-white sm:px-7">
+
+        <div className="flex items-start justify-between gap-4">
+
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-300">
+              Product Management
+            </p>
+
+            <h2 className="mt-2 text-2xl font-semibold">
+              Delete Product
+            </h2>
+          </div>
+
+          <button
+            id="close"
+            type="button"
+            onClick={handleOnChange}
+            className="
+              flex
+              h-9
+              w-9
+              flex-shrink-0
+              items-center
+              justify-center
+              rounded-full
+              bg-white/10
+              text-lg
+              text-gray-200
+              transition
+              hover:bg-white/20
+              hover:text-white
+            "
+          >
+            ×
+          </button>
+
         </div>
+
       </div>
-  )
+
+
+      {/* =====================================================
+          CONTENT
+      ====================================================== */}
+      <div className="px-6 py-7 sm:px-7">
+
+        <div className="flex items-start gap-4">
+
+          {/* Warning Icon */}
+          <div className="
+            flex
+            h-12
+            w-12
+            flex-shrink-0
+            items-center
+            justify-center
+            rounded-full
+            bg-red-50
+            text-red-600
+          ">
+            !
+          </div>
+
+
+          {/* Message */}
+          <div className="min-w-0">
+
+            <h3 className="text-base font-semibold text-gray-900">
+              Are you sure?
+            </h3>
+
+            <p className="mt-2 text-sm leading-6 text-gray-500">
+              You are about to permanently delete this product.
+              This action cannot be undone.
+            </p>
+
+          </div>
+
+        </div>
+
+
+        {/* Product Preview */}
+        {item && (
+          <div className="
+            mt-6
+            flex
+            items-center
+            gap-4
+            rounded-2xl
+            border
+            border-[#e5dfd6]
+            bg-white
+            p-4
+          ">
+
+            <div className="
+              h-14
+              w-14
+              flex-shrink-0
+              overflow-hidden
+              rounded-xl
+              bg-[#f3eee6]
+            ">
+              {item?.image ? (
+                <img
+                  src={item.image}
+                  alt={item?.item_name || "Product"}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                  No image
+                </div>
+              )}
+            </div>
+
+            <div className="min-w-0">
+
+              <p className="truncate text-sm font-semibold text-gray-900">
+                {item?.item_name}
+              </p>
+
+              <p className="mt-1 text-xs text-gray-500">
+                {item?.category || "Product"}
+              </p>
+
+            </div>
+
+          </div>
+        )}
+
+
+        {/* =================================================
+            ACTIONS
+        ================================================== */}
+        <div className="mt-7 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+
+          <button
+            id="close"
+            type="button"
+            onClick={handleOnChange}
+            className="
+              w-full
+              rounded-full
+              border
+              border-gray-300
+              bg-white
+              px-5
+              py-3
+              text-sm
+              font-semibold
+              text-gray-700
+              transition
+              hover:border-gray-400
+              hover:bg-gray-50
+              sm:w-auto
+            "
+          >
+            Keep Product
+          </button>
+
+          <button
+            type="button"
+            onClick={onChange}
+            className="
+              w-full
+              rounded-full
+              bg-red-600
+              px-5
+              py-3
+              text-sm
+              font-semibold
+              text-white
+              shadow-sm
+              transition-all
+              duration-200
+              hover:bg-red-700
+              hover:shadow-md
+              active:scale-[0.99]
+              sm:w-auto
+            "
+          >
+            Delete Product
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+);
 }

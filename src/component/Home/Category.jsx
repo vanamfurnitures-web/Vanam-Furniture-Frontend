@@ -31,6 +31,10 @@ export default function Category() {
       name: "Closet",
       src: "https://i.ibb.co/qpJMNf2/chastity-cortijo-o-Ofu-QYni-REA-unsplash.jpg",
     },
+ {
+  name: "Kitchen",
+  src: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=85",
+},
   ];
 
   const shop_route = (e) => {

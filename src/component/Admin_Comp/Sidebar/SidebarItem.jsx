@@ -1,79 +1,245 @@
-import { useState } from "react";
-import { IoIosArrowDroprightCircle } from "react-icons/io";
-import { NavLink, useNavigate } from "react-router-dom";
-import { actionType } from "../../../context/reducer";
-import { useStateValue } from "../../../context/StateProvider";
+import React, { useState } from "react";
+import { MdKeyboardArrowDown } from "react-icons/md";
+import { NavLink } from "react-router-dom";
 
-export default function SidebarItem({ item, isOpen }) {
+export default function SidebarItem({
+  item,
+  isOpen,
+  onLogout,
+}) {
   const [open, setOpen] = useState(false);
-  const navigate = useNavigate();
-  const [{}, dispatch] =
-  useStateValue();
-  const logOutCheck = (id)=>{
-    
-    if (id === "Logout") {
-      dispatch({
-        type: actionType.LOG_OUT_USER,
-        user: null,
-        token: null,
-      });
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      // toggleUserMenu();
-    }
-  }
 
-
+  /* =====================================================
+      PRODUCT / CHILD MENU
+  ====================================================== */
   if (item.childrens) {
     return (
-      <div className={open ? "sidebar-item open" : "sidebar-item"}>
-        <div className="sidebar-title flex link_text text-lg">
-          <span className="flex gap-2">
-            <div>{item.icon}</div>
-            <div className="text text-xs" id={item.name} onClick={()=>{logOutCheck(item.name)}}>{isOpen && item.name}</div>
-          </span>
-          {/* <i className="bi-chevron-down toggle-btn" ></i> */}
-          <IoIosArrowDroprightCircle onClick={() => setOpen(!open)} />
-        </div>
-        <div className="sidebar-content">
-          {isOpen &&
-            item.childrens.map((child, index) => (
-              <SidebarItem key={index} item={child} isOpen={isOpen} />
+      <div className="w-full">
+
+        {/* Parent item */}
+        <button
+          type="button"
+          onClick={() => setOpen((prev) => !prev)}
+          className="
+            group
+            flex
+            w-full
+            items-center
+            justify-between
+            rounded-xl
+            px-2
+            py-3
+            text-left
+            text-gray-400
+            transition-all
+            duration-200
+            hover:bg-white/5
+            hover:text-white
+          "
+        >
+
+          <div className="flex min-w-0 items-center">
+
+            {/* Icon */}
+            <span
+              className="
+                flex
+                h-10
+                w-10
+                flex-shrink-0
+                items-center
+                justify-center
+                rounded-xl
+                bg-white/5
+                text-base
+                text-gray-400
+                transition-all
+                duration-200
+                group-hover:bg-amber-900/20
+                group-hover:text-amber-300
+              "
+            >
+              {item.icon}
+            </span>
+
+            {/* Text */}
+            {isOpen && (
+              <span className="ml-3 truncate text-sm font-medium">
+                {item.name}
+              </span>
+            )}
+
+          </div>
+
+
+          {/* Arrow */}
+          {isOpen && (
+            <MdKeyboardArrowDown
+              className={`
+                flex-shrink-0
+                text-xl
+                text-gray-500
+                transition-transform
+                duration-200
+                ${
+                  open
+                    ? "rotate-180 text-amber-300"
+                    : ""
+                }
+              `}
+            />
+          )}
+
+        </button>
+
+
+        {/* =================================================
+            CHILDREN
+        ================================================== */}
+        {isOpen && open && (
+          <div className="ml-5 mt-1 space-y-1 border-l border-white/10 pl-3">
+
+            {item.childrens.map((child, index) => (
+              <NavLink
+                key={index}
+                to={child.path}
+                className={({ isActive }) => `
+                  group
+                  flex
+                  items-center
+                  gap-3
+                  rounded-lg
+                  px-3
+                  py-2.5
+                  text-xs
+                  transition-all
+                  duration-200
+                  ${
+                    isActive
+                      ? "bg-amber-900/20 font-semibold text-amber-300"
+                      : "text-gray-500 hover:bg-white/5 hover:text-gray-200"
+                  }
+                `}
+              >
+                <span className="text-[11px] text-gray-500 group-hover:text-amber-300">
+                  {child.icon}
+                </span>
+
+                <span>
+                  {child.name}
+                </span>
+              </NavLink>
             ))}
-        </div>
+
+          </div>
+        )}
       </div>
     );
-  } else {
+  }
+
+
+  /* =====================================================
+      LOGOUT
+  ====================================================== */
+  if (item.name === "Logout") {
     return (
-      <NavLink
-      onClick={()=>{logOutCheck(item.name)}}
-      id={item.name}
-              to={item.path}
-             className={`flex sidebar-item plain cursor-pointer`}>
-        <div className="flex gap-2">
-          <div>{item.icon}</div>
-          <div className="text text-xs">{isOpen && item.name}</div>
-        </div>
-        </NavLink>
+      <button
+        type="button"
+        onClick={onLogout}
+        className="
+          group
+          flex
+          w-full
+          items-center
+          rounded-xl
+          px-2
+          py-3
+          text-left
+          text-gray-400
+          transition-all
+          duration-200
+          hover:bg-red-500/10
+          hover:text-red-300
+        "
+      >
+        <span
+          className="
+            flex
+            h-10
+            w-10
+            flex-shrink-0
+            items-center
+            justify-center
+            rounded-xl
+            bg-white/5
+            text-lg
+            transition
+            group-hover:bg-red-500/10
+          "
+        >
+          {item.icon}
+        </span>
+
+        {isOpen && (
+          <span className="ml-3 text-sm font-medium">
+            Logout
+          </span>
+        )}
+      </button>
     );
   }
-}
 
-// (
-//     <NavLink
-//       to={item.path}
-//       key={index}
-//       className="flex sticky items-center p-4 gap-4 text-white transition-all duration-500 hover:bg-lightBlue-100 hover:text-white"
-//       activeClassName="active"
-//       end={true}
-//     >
-//       <div className="text-xl">{item.icon}</div>
-//       <div
-//         style={{ display: isOpen ? "block" : "none" }}
-//         className="link_text"
-//         onClick={() => item.name === "Logout" && onLogOut(item.name)}
-//       >
-//         {item.name}
-//       </div>
-//     </NavLink>
-//   )
+
+  /* =====================================================
+      NORMAL ITEM
+  ====================================================== */
+  return (
+    <NavLink
+      to={item.path}
+      end
+      className={({ isActive }) => `
+        group
+        flex
+        w-full
+        items-center
+        rounded-xl
+        px-2
+        py-3
+        transition-all
+        duration-200
+        ${
+          isActive
+            ? "bg-amber-900/20 text-amber-300 shadow-sm"
+            : "text-gray-400 hover:bg-white/5 hover:text-white"
+        }
+      `}
+    >
+
+      <span
+        className="
+          flex
+          h-10
+          w-10
+          flex-shrink-0
+          items-center
+          justify-center
+          rounded-xl
+          bg-white/5
+          text-base
+          transition-all
+          duration-200
+          group-hover:bg-white/10
+        "
+      >
+        {item.icon}
+      </span>
+
+      {isOpen && (
+        <span className="ml-3 truncate text-sm font-medium">
+          {item.name}
+        </span>
+      )}
+
+    </NavLink>
+  );
+}

@@ -1,253 +1,683 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import {
+  FiEdit2,
+  FiPackage,
+  FiPlus,
+  FiTrash2,
+} from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+
 import Sidebar from "../../component/Admin_Comp/Sidebar/Sidebar";
 import Toggle_button from "../../component/Admin_Comp/Toggle_button";
 import EditProduct from "../../component/Admin_Comp/EditProduct";
 import DeleteProduct from "../../component/Admin_Comp/DeleteProduct";
+
 import { useStateValue } from "../../context/StateProvider";
 import { actionType } from "../../context/reducer";
 
 export default function All_Products() {
-  const [{ product, user,updateProd }, dispatch] = useStateValue();
-  console.log(product);
-  const [data, setData] = useState(product);
-  useEffect(() => {
-    setData(product)
-    console.log("jolo");
-  }, [product]);
-  const [editprod, setEditprod] = useState(null);
-  const [deleteprod, setDeleteprod] = useState(null);
-  const [editedData, setEditedData] = useState(null);
-  const [visible, setVisible] = useState(false);
-  function onClose() {
-    setVisible(!visible);
-  }
-  const [delvisible, setDelvisible] = useState(false);
-  const [updateFeature, setUpdateFeature] = useState(false);
-  function delonClose() {
-    setDelvisible(!delvisible);
-  }
-  const edited = (itemdata) => {
-    setEditedData(itemdata);
-  };
-  console.log(editedData)
+  const [{ product, updateProd }, dispatch] = useStateValue();
 
+  const navigate = useNavigate();
+
+  const [data, setData] = useState(product || []);
+
+  const [editprod, setEditprod] = useState(false);
+  const [deleteprod, setDeleteprod] = useState(false);
+
+  const [editedData, setEditedData] = useState(null);
+
+  const [visible, setVisible] = useState(false);
+  const [delvisible, setDelvisible] = useState(false);
+
+  const [updateFeature, setUpdateFeature] = useState(false);
+
+  /* =========================================================
+      KEEP LOCAL DATA IN SYNC
+  ========================================================= */
+  useEffect(() => {
+    setData(product || []);
+  }, [product]);
+
+  /* =========================================================
+      FETCH PRODUCTS
+  ========================================================= */
   async function onSubmit() {
-    console.log("holo");
     if (!data || updateFeature || updateProd) {
       try {
-        setUpdateFeature(!updateFeature);
         dispatch({
           type: actionType.UPDATE_PRODUCTS,
           updateProd: false,
         });
+
         const response = await axios.get(
           `${import.meta.env.VITE_LINK}/products`
         );
-        console.log(response.data.product);
-        setData(response.data.product);
-        // toast.success("Product ad succesfully..!");
+
+        const products = response?.data?.product || [];
+
+        setData(products);
+
         dispatch({
           type: actionType.SET_PRODUCTS,
-          product: response.data.product,
+          product: products,
         });
-        localStorage.setItem("product", JSON.stringify(response.data.product));
-      } catch (err) {
-        const responseText = err.response.data;
 
-        console.log(responseText);
-        toast.error(responseText.msg);
-        console.log(err);
+        localStorage.setItem(
+          "product",
+          JSON.stringify(products)
+        );
+      } catch (err) {
+        const responseText = err?.response?.data;
+
+        console.error(responseText);
+
+        toast.error(
+          responseText?.msg || "Unable to load products"
+        );
       }
     }
   }
 
-  
-  console.log(data);
-
   useEffect(() => {
     onSubmit();
-    console.log("jolo");
   }, []);
-  // this useEffect could be crashed server
-  // MongoServerError: Plan executor error during findAndModify :: caused by :: Performing an update on the path '_id'
-  // would modify the immutable field '_id'
 
+  /* =========================================================
+      EDIT MODAL
+  ========================================================= */
+  function onClose() {
+    setVisible((prev) => !prev);
+  }
+
+  const edited = (itemdata) => {
+    setEditedData(itemdata);
+  };
+
+  /* =========================================================
+      DELETE MODAL
+  ========================================================= */
+  function delonClose() {
+    setDelvisible((prev) => !prev);
+  }
+
+  /* =========================================================
+      FEATURED PRODUCT TOGGLE
+  ========================================================= */
   async function toggle_Switch(id) {
     try {
-      // Send a PUT request to the server to update the product's 'feature_product' field
-      let featureProductValue = !data.find((item) => item._id === id)
-        .feature_product;
+      const currentProduct = data.find(
+        (item) => item._id === id
+      );
 
-      featureProductValue = {
-        feature_product: featureProductValue, // Specify the field you want to update and its new value
+      if (!currentProduct) {
+        toast.error("Product not found");
+        return;
+      }
+
+      const featureProductValue = {
+        feature_product: !currentProduct.feature_product,
       };
 
-      console.log(featureProductValue);
       const response = await axios.put(
         `${import.meta.env.VITE_LINK}/products/${id}`,
         featureProductValue
       );
-      setUpdateFeature(!updateFeature);
-      // Handle the response from the server (you can add more logic as needed)
+
       console.log(response);
-      toast.success("Product feature status updated successfully!");
 
-      // Update the local data if needed (for immediate UI feedback)
+      setUpdateFeature((prev) => !prev);
+
       setData((prevData) =>
-        prevData.map((item) => {
-          if (item._id === id) {
-            return {
-              ...item,
-              feature_product: !item.feature_product, // Toggle the 'feature_product' value
-            };
-          }
-          return item;
-        })
+        prevData.map((item) =>
+          item._id === id
+            ? {
+                ...item,
+                feature_product: !item.feature_product,
+              }
+            : item
+        )
       );
-    } catch (err) {
-      const responseText = err.response.data;
 
-      console.log(responseText);
-      toast.error("Failed to update product feature status");
-      console.log(err);
+    } catch (err) {
+      console.error(err);
+
+      toast.error(
+        "Failed to update product feature status"
+      );
     }
   }
 
   return (
-    <div className="mt-12 text-black flex">
-      <Sidebar className="sticky scroll-m-0 z-50" />
+    <div className="min-h-screen bg-[#f5f3ef] text-gray-900">
 
-      <div className="overflow-x-auto w-full p-10">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <h3 className="text-4xl font-bold text-gray-700">Products</h3>
-            <p className="text-xl mt-2">Home : Add new</p>
-          </div>
-          <button className="px-3 py-0 text-lg text-white duration-150 ease-in-out bg-blue-500 rounded hover:bg-blue-700 w-32 h-10">
-            View All
-          </button>
-        </div>
+      {/* =====================================================
+          ADMIN LAYOUT
+      ====================================================== */}
+      <div className="flex min-h-screen w-full">
 
-        <table className="min-w-full mt-5">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                Category
-              </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                Selling Price
-              </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                Regular Price
-              </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                Quantity
-              </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                Purchased
-              </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                Featured
-              </th>
-              <th className="px-6 py-3 bg-gray-200 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {data &&
-              data.map((item) => (
-                <tr key={item.id} className="bg-white">
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-16 w-16">
-                        <img
-                          className="h-16 w-16 rounded-full"
-                          src={item?.image}
-                          alt=""
-                        />
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">
-                          {item?.item_name}
-                        </div>
-                        <div className="text-sm text-gray-500">{item?.id}</div>
-                      </div>
+        <Sidebar />
+
+        <main className="min-w-0 flex-1">
+
+          {/* =================================================
+              PAGE HEADER
+          ================================================== */}
+          <header className="border-b border-[#e5dfd6] bg-[#faf9f7]">
+
+            <div className="mx-auto max-w-[1550px] px-5 py-6 sm:px-7 lg:px-10">
+
+              <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+
+                {/* Heading */}
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-amber-800">
+                    Product Management
+                  </p>
+
+                  <h1 className="mt-2 text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
+                    Products
+                  </h1>
+
+                  <p className="mt-2 text-sm text-gray-500">
+                    Manage your Vanam Furnitures collection.
+                  </p>
+                </div>
+
+                {/* Stats + Add */}
+                <div className="flex flex-wrap items-center gap-3">
+
+                  <div className="flex items-center gap-2 rounded-full border border-[#e5dfd6] bg-white px-4 py-2.5 shadow-sm">
+                    <FiPackage className="text-amber-800" />
+
+                    <span className="text-sm font-semibold text-gray-900">
+                      {data.length}
+                    </span>
+
+                    <span className="text-xs text-gray-500">
+                      Products
+                    </span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      navigate("/admin/products/addproducts")
+                    }
+                    className="
+                      inline-flex
+                      items-center
+                      gap-2
+                      rounded-full
+                      bg-[#211c17]
+                      px-5
+                      py-2.5
+                      text-sm
+                      font-semibold
+                      text-white
+                      shadow-sm
+                      transition
+                      hover:bg-amber-900
+                      hover:shadow-lg
+                    "
+                  >
+                    <FiPlus />
+                    Add Product
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+          </header>
+
+
+          {/* =================================================
+              CONTENT
+          ================================================== */}
+          <section className="mx-auto max-w-[1550px] px-5 py-6 sm:px-7 lg:px-10 lg:py-8">
+
+            {/* =================================================
+                SUMMARY CARDS
+            ================================================== */}
+            <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+
+              {/* Total */}
+              <div className="rounded-2xl border border-[#e5dfd6] bg-white p-5 shadow-sm">
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.15em] text-gray-400">
+                      Total Products
+                    </p>
+
+                    <p className="mt-2 text-2xl font-semibold text-gray-900">
+                      {data.length}
+                    </p>
+                  </div>
+
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f3eee6] text-amber-900">
+                    <FiPackage />
+                  </div>
+
+                </div>
+              </div>
+
+
+              {/* Featured */}
+              <div className="rounded-2xl border border-[#e5dfd6] bg-white p-5 shadow-sm">
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.15em] text-gray-400">
+                      Featured
+                    </p>
+
+                    <p className="mt-2 text-2xl font-semibold text-gray-900">
+                      {
+                        data.filter(
+                          (item) => item.feature_product
+                        ).length
+                      }
+                    </p>
+                  </div>
+
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f3eee6] text-amber-900">
+                    ★
+                  </div>
+
+                </div>
+              </div>
+
+
+              {/* Categories */}
+              <div className="rounded-2xl border border-[#e5dfd6] bg-white p-5 shadow-sm">
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.15em] text-gray-400">
+                      Categories
+                    </p>
+
+                    <p className="mt-2 text-2xl font-semibold text-gray-900">
+                      {
+                        new Set(
+                          data.map(
+                            (item) => item.category
+                          )
+                        ).size
+                      }
+                    </p>
+                  </div>
+
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#f3eee6] text-amber-900">
+                    ◈
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+
+
+            {/* =================================================
+                TABLE
+            ================================================== */}
+            <div className="overflow-hidden rounded-[1.75rem] border border-[#e5dfd6] bg-white shadow-sm">
+
+              {/* Table Header */}
+              <div className="flex flex-col gap-3 border-b border-gray-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-800">
+                    Product Directory
+                  </p>
+
+                  <h2 className="mt-1 text-lg font-semibold text-gray-900">
+                    All Products
+                  </h2>
+                </div>
+
+                <span className="text-xs text-gray-400">
+                  {data.length} records
+                </span>
+
+              </div>
+
+
+              {/* Empty State */}
+              {data.length === 0 ? (
+
+                <div className="flex min-h-[320px] items-center justify-center">
+
+                  <div className="text-center">
+
+                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#f3eee6] text-amber-900">
+                      <FiPackage className="text-xl" />
                     </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="text-sm text-gray-900">{item.category}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="text-sm text-gray-900">$ {item.sale}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="text-sm text-gray-900">$ {item.price}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="text-sm text-gray-900">{item.quantity}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="text-sm text-gray-900">
-                      {item.purchasing_number}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                    <div className="text-sm text-gray-900">
-                      <Toggle_button
-                        enabled={item.feature_product}
-                        id={item._id}
-                        toggle_Switch={toggle_Switch}
-                      />
-                    </div>
-                  </td>
-                  <td className="px-6 py-9 whitespace-no-wrap border-gray-200 flex gap-5">
-                    <div
-                      className="text cursor-pointer"
-                      onClick={() => {
-                        setEditprod(true);
-                        edited(item);
-                        onClose();
-                      }}
-                    >
-                      Edit
-                    </div>
-                    <div
-                      className="flex-1 cursor-pointer items-end justify-end"
-                      onClick={() => {
-                        setDeleteprod(true);
-                        edited(item);
-                        delonClose();
-                      }}
-                    >
-                      {" "}
-                      delete{" "}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            {editprod && (
-              <EditProduct
-                item={editedData}
-                onClose={onClose}
-                visible={visible}
-              />
-            )}
-            {deleteprod && (
-              <DeleteProduct
-                item={editedData}
-                delonClose={delonClose}
-                delvisible={delvisible}
-              />
-            )}
-          </tbody>
-        </table>
+
+                    <h3 className="mt-4 text-lg font-semibold text-gray-900">
+                      No products found
+                    </h3>
+
+                    <p className="mt-1 text-sm text-gray-500">
+                      Add your first product to get started.
+                    </p>
+
+                  </div>
+
+                </div>
+
+              ) : (
+
+                <div className="overflow-x-auto">
+
+                  <table className="min-w-[1250px] w-full">
+
+                    {/* =================================================
+                        TABLE HEAD
+                    ================================================== */}
+                    <thead>
+
+                      <tr className="border-b border-gray-100 bg-[#faf8f4]">
+
+                        <th className="px-6 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                          Product
+                        </th>
+
+                        <th className="px-6 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                          Category
+                        </th>
+
+                        <th className="px-6 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                          Sale Price
+                        </th>
+
+                        <th className="px-6 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                          Regular Price
+                        </th>
+
+                        <th className="px-6 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                          Stock
+                        </th>
+
+                        <th className="px-6 py-4 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                          Purchased
+                        </th>
+
+                        <th className="px-6 py-4 text-center text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                          Featured
+                        </th>
+
+                        <th className="px-6 py-4 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-gray-500">
+                          Actions
+                        </th>
+
+                      </tr>
+
+                    </thead>
+
+
+                    {/* =================================================
+                        TABLE BODY
+                    ================================================== */}
+                    <tbody className="divide-y divide-gray-100">
+
+                      {data.map((item) => {
+
+                        const salePrice = Number(item?.sale || 0);
+                        const regularPrice = Number(item?.price || 0);
+                        const quantityValue = Number(
+                          item?.quantity || 0
+                        );
+
+                        return (
+                          <tr
+                            key={item?._id || item?.id}
+                            className="group transition-colors duration-200 hover:bg-[#fcfaf7]"
+                          >
+
+                            {/* Product */}
+                            <td className="px-6 py-5">
+
+                              <div className="flex items-center gap-4">
+
+                                <div className="h-14 w-14 flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-[#f7f4ef]">
+
+                                  {item?.image ? (
+                                    <img
+                                      src={item.image}
+                                      alt={
+                                        item?.item_name ||
+                                        "Product"
+                                      }
+                                      className="h-full w-full object-cover"
+                                    />
+                                  ) : (
+                                    <div className="flex h-full w-full items-center justify-center text-xs text-gray-400">
+                                      No image
+                                    </div>
+                                  )}
+
+                                </div>
+
+                                <div className="min-w-0">
+
+                                  <p className="max-w-[220px] truncate text-sm font-semibold text-gray-900">
+                                    {item?.item_name || "Unnamed Product"}
+                                  </p>
+
+                                  <p className="mt-1 text-xs text-gray-400">
+                                    SKU: {item?.SKU || "—"}
+                                  </p>
+
+                                </div>
+
+                              </div>
+
+                            </td>
+
+
+                            {/* Category */}
+                            <td className="px-6 py-5">
+
+                              <span className="inline-flex rounded-full bg-[#f3eee6] px-3 py-1.5 text-xs font-semibold text-amber-900">
+                                {item?.category || "—"}
+                              </span>
+
+                            </td>
+
+
+                            {/* Sale Price */}
+                            <td className="px-6 py-5">
+
+                              <span className="text-sm font-semibold text-amber-900">
+                                ₹ {salePrice}
+                              </span>
+
+                            </td>
+
+
+                            {/* Regular Price */}
+                            <td className="px-6 py-5">
+
+                              <span
+                                className={
+                                  salePrice > 0 &&
+                                  salePrice < regularPrice
+                                    ? "text-sm text-gray-500 line-through"
+                                    : "text-sm text-gray-500"
+                                }
+                              >
+                                ₹ {regularPrice}
+                              </span>
+
+                            </td>
+
+
+                            {/* Stock */}
+                            <td className="px-6 py-5">
+
+                              <span
+                                className={`
+                                  inline-flex
+                                  rounded-full
+                                  px-3
+                                  py-1.5
+                                  text-xs
+                                  font-semibold
+                                  ${
+                                    quantityValue <= 0
+                                      ? "bg-red-50 text-red-600"
+                                      : quantityValue < 10
+                                      ? "bg-amber-50 text-amber-700"
+                                      : "bg-green-50 text-green-700"
+                                  }
+                                `}
+                              >
+                                {quantityValue} in stock
+                              </span>
+
+                            </td>
+
+
+                            {/* Purchased */}
+                            <td className="px-6 py-5">
+
+                              <span className="text-sm text-gray-600">
+                                {item?.purchasing_number ?? 0}
+                              </span>
+
+                            </td>
+
+
+                            {/* Featured */}
+                            <td className="px-6 py-5 text-center">
+
+                              <div className="flex justify-center">
+
+                                <Toggle_button
+                                  enabled={item.feature_product}
+                                  id={item._id}
+                                  toggle_Switch={toggle_Switch}
+                                />
+
+                              </div>
+
+                            </td>
+
+
+                            {/* Actions */}
+                            <td className="px-6 py-5">
+
+                              <div className="flex items-center justify-end gap-2">
+
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditprod(true);
+                                    edited(item);
+                                    setVisible(true);
+                                  }}
+                                  className="
+                                    flex
+                                    h-9
+                                    w-9
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    border
+                                    border-gray-200
+                                    bg-white
+                                    text-gray-500
+                                    transition
+                                    hover:border-amber-800
+                                    hover:bg-[#f7f2eb]
+                                    hover:text-amber-900
+                                  "
+                                  title="Edit product"
+                                >
+                                  <FiEdit2 className="text-sm" />
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setDeleteprod(true);
+                                    edited(item);
+                                    setDelvisible(true);
+                                  }}
+                                  className="
+                                    flex
+                                    h-9
+                                    w-9
+                                    items-center
+                                    justify-center
+                                    rounded-full
+                                    border
+                                    border-gray-200
+                                    bg-white
+                                    text-gray-500
+                                    transition
+                                    hover:border-red-200
+                                    hover:bg-red-50
+                                    hover:text-red-600
+                                  "
+                                  title="Delete product"
+                                >
+                                  <FiTrash2 className="text-sm" />
+                                </button>
+
+                              </div>
+
+                            </td>
+
+                          </tr>
+                        );
+                      })}
+
+                    </tbody>
+
+                  </table>
+
+                </div>
+              )}
+
+            </div>
+
+          </section>
+
+        </main>
+
       </div>
+
+
+      {/* =========================================================
+          MODALS
+      ========================================================== */}
+
+      {editprod && (
+        <EditProduct
+          item={editedData}
+          onClose={onClose}
+          visible={visible}
+        />
+      )}
+
+      {deleteprod && (
+        <DeleteProduct
+          item={editedData}
+          delonClose={delonClose}
+          delvisible={delvisible}
+        />
+      )}
+
     </div>
   );
 }

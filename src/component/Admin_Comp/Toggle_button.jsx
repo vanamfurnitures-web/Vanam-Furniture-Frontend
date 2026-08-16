@@ -1,32 +1,88 @@
-import React from 'react'
+import React from "react";
+import { FiCheck } from "react-icons/fi";
 
-export default function Toggle_button({enabled,toggle_Switch,id}) {
-    function handleChange () {
-        console.log("ki");
-        toggle_Switch(id)
-    }
+export default function Toggle_button({
+  enabled,
+  toggle_Switch,
+  id,
+}) {
+  function handleChange() {
+    toggle_Switch(id);
+  }
+
+  
   return (
-    <div className="relative flex flex-col items-center justify-center overflow-hidden">
-            <div className="flex">
-                <label className="inline-flex relative items-center mr-5 cursor-pointer">
-                    <input
-                        type="checkbox"
-                        className="sr-only peer"
-                        checked={enabled}
-                        readOnly
-                    />
-                    <div
-                        onClick={
-                            handleChange
-                            // setEnabled(!enabled);
-                        }
-                        className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
-                    ></div>
-                    <span className="ml-2 text-sm font-medium text-gray-900">
-                        ON
-                    </span>
-                </label>
-            </div>
-        </div>
-  )
+    <button
+      type="button"
+      onClick={handleChange}
+      aria-pressed={enabled}
+      className="group inline-flex items-center gap-2 focus:outline-none"
+    >
+      {/* Toggle */}
+      <span
+        className={`
+          relative
+          flex
+          h-6
+          w-11
+          flex-shrink-0
+          items-center
+          rounded-full
+          p-[3px]
+          transition-all
+          duration-300
+          ${
+            enabled
+              ? "bg-amber-900"
+              : "bg-gray-300"
+          }
+        `}
+      >
+        <span
+          className={`
+            flex
+            h-5
+            w-5
+            items-center
+            justify-center
+            rounded-full
+            bg-white
+            shadow-sm
+            transition-all
+            duration-300
+            ${
+              enabled
+                ? "translate-x-5"
+                : "translate-x-0"
+            }
+          `}
+        >
+          {enabled && (
+            <FiCheck className="text-[10px] text-amber-900" />
+          )}
+        </span>
+      </span>
+
+      {/* Label */}
+      <span
+        className={`
+          min-w-[70px]
+          text-left
+          text-[11px]
+          font-semibold
+          uppercase
+          tracking-wide
+          transition-colors
+          duration-200
+          ${
+            enabled
+              ? "text-amber-900"
+              : "text-gray-400"
+          }
+        `}
+      >
+        {enabled ? "Featured" : "Inactive"}
+      </span>
+    </button>
+  );
 }

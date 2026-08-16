@@ -1,25 +1,28 @@
-// import { getAuth } from "firebase/auth";
 import React, { useState } from "react";
-import { BiLogOut } from "react-icons/bi";
 import {
   FaBars,
   FaCommentAlt,
   FaRegChartBar,
+  FaShoppingBag,
   FaTh,
-  FaThList,
   FaUserAlt,
 } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
-// import { useStateValue } from "../../../context/StateProvider";
-// import SidebarItem from "./SidebarItem";
-// import { useStateValue } from "../../context/StateProvider";
-// import { actionType } from "../../context/reducer";
-import SidebarItem from "../../Admin_Comp/Sidebar/SidebarItem.jsx"
+import { BiLogOut } from "react-icons/bi";
+import SidebarItem from "../../Admin_Comp/Sidebar/SidebarItem.jsx";
 import { useStateValue } from "../../../context/StateProvider";
+import { actionType } from "../../../context/reducer";
+import { useNavigate } from "react-router-dom";
+
 export default function Sidebar({ children }) {
   const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
+
+  const [{ user }, dispatch] = useStateValue();
+  const navigate = useNavigate();
+
+  const toggle = () => {
+    setIsOpen((prev) => !prev);
+  };
+
   const menuItem = [
     {
       path: "/admin/dashboard",
@@ -34,19 +37,18 @@ export default function Sidebar({ children }) {
     {
       path: "/admin/products",
       name: "Products",
-      icon: <FaThList />,
+      icon: <FaShoppingBag />,
       childrens: [
         {
           path: "/admin/products",
-          name: "products",
-          icon: <FaThList />,
+          name: "Products",
+          icon: <FaShoppingBag />,
         },
         {
           path: "/admin/products/addproducts",
-          name: "Add Products",
-          icon: <FaThList />,
+          name: "Add Product",
+          icon: <FaShoppingBag />,
         },
-        
       ],
     },
     {
@@ -56,7 +58,7 @@ export default function Sidebar({ children }) {
     },
     {
       path: "/admin/review",
-      name: "Review",
+      name: "Reviews",
       icon: <FaCommentAlt />,
     },
     {
@@ -66,59 +68,87 @@ export default function Sidebar({ children }) {
     },
   ];
 
-  //   const auth = getAuth();
-  const [{ cartShow, cartItems, user }, dispatch] = useStateValue();
+  const handleLogout = () => {
+    dispatch({
+      type: actionType.LOG_OUT_USER,
+      user: null,
+      token: null,
+    });
 
-  const navigate = useNavigate();
-
-  function onLogOut() {
     localStorage.removeItem("user");
-    // console.log(auth.currentUser);
+    localStorage.removeItem("token");
 
-    // auth
-    //   .signOut()
-    //   .then(() => {
-    //     dispatch({
-    //       type: actionType.DEL_USER,
-    //     });
-    //     console.log(auth.currentUser);
-    //     console.log("sign out");
-    //     navigate("/"); // Navigate to "/" after successful sign out
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error signing out:", error);
-    //   });
-  }
+    setIsOpen(false);
+    navigate("/");
+  };
 
   return (
-    <div className="flex sticky z-40">
-      <div
-        onMouseEnter={() => setIsOpen(true)}
-        onMouseLeave={() => setIsOpen(false)}
-        className={`${
-          isOpen ? "w-44" : "w-12"
-        } bg-black scroll-none text-white transition-all duration-500 flex-shrink-0`}
-      >
-        <div className="top_section">
-          {/* <h1
-            style={{ display: isOpen ? "block" : "none" }}
-            className="logoo text-xl"
-          >
-            Logo
-          </h1> */}
-          <div className="bars md:hidden">
-            <FaBars onClick={toggle} className="text-3xl flex right-2" />
-          </div>
-        </div>
-        <div
-          className="menu-items-container"
-          style={{ position: "sticky", top: 10 }}
+    <aside
+      className={`
+        sticky
+        top-0
+        left-0
+        z-[100]
+        h-screen
+        flex-shrink-0
+        bg-[#1b1714]
+        text-white
+        shadow-xl
+        transition-all
+        duration-300
+        ease-in-out
+        ${isOpen ? "w-52" : "w-16"}
+      `}
+      onMouseEnter={() => setIsOpen(true)}
+      onMouseLeave={() => setIsOpen(false)}
+    >
+      {/* =====================================================
+          TOP
+      ====================================================== */}
+      <div className="flex h-20 items-center justify-center border-b border-white/10">
+
+        <button
+          type="button"
+          onClick={toggle}
+          className="
+            flex
+            h-10
+            w-10
+            items-center
+            justify-center
+            rounded-xl
+            text-gray-400
+            transition-all
+            duration-200
+            hover:bg-white/10
+            hover:text-amber-300
+          "
         >
-          {menuItem.map((item, index) => (
-            <SidebarItem key={index} item={item} isOpen={isOpen} />
-          ))}
-        </div>
+          <FaBars className="text-lg" />
+        </button>
+
       </div>
-    </div>
+
+
+      {/* =====================================================
+          MENU
+      ====================================================== */}
+      <div className="h-[calc(100vh-80px)] overflow-y-auto px-2 py-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+
+        <div className="space-y-2">
+
+          {menuItem.map((item, index) => (
+            <SidebarItem
+              key={index}
+              item={item}
+              isOpen={isOpen}
+              onLogout={handleLogout}
+            />
+          ))}
+
+        </div>
+
+      </div>
+    </aside>
   );
 }

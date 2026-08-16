@@ -1,137 +1,341 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  FiArrowRight,
+  FiDollarSign,
+  FiPackage,
+  FiShoppingCart,
+  FiUsers,
+} from "react-icons/fi";
+
 import Sidebar from "../../component/Admin_Comp/Sidebar/Sidebar";
 import Box from "../../component/Admin_Comp/Dashboard/Box";
-import Transaction from "../../component/Admin_Comp/Dashboard/Transaction";
 import OrderGraph from "../../component/Admin_Comp/Dashboard/OrderGraph";
 import Seles_Report from "../../component/Admin_Comp/Dashboard/Seles_Report";
 import New_order from "../../component/Admin_Comp/Dashboard/New_order";
 import Top_Products from "../../component/Admin_Comp/Dashboard/Top_Products";
 import New_customers from "../../component/Admin_Comp/Dashboard/New_customers";
-// import Sidebar from "../../component/Admin_Comp/Sidebar/Sidebar";
-// // import Sidebar from "../../component/Header/Admin_comp/Sidebar/Sidebar";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
+
   return (
-    <div className="mt-12 w- flex text-black">
-      <Sidebar className="sticky scroll-m-0 z-50" />
-      <div className="p-10">
-        <div className="flex items-center justify-between">
-          <div className="flex flex-col">
-            <h3 className="text-4xl font-bold text-gray-700">Welcome Back</h3>
-            <p className="text-xl mt-2">Home</p>
-          </div>
-          <button className="px-3 py-0 text-lg text-white duration-150 ease-in-out bg-blue-500 rounded hover:bg-blue-700 w-32 h-10">
-            View All
-          </button>
-        </div>
-        <div className="mt-5 bg-gray-100  rounded-lg p-5 flex flex-col gap-5 text-gray-600 ">
-          <div className="flex gap-5">
-            <div className="flex w-1/2 flex-col gap-5">
-              <div className="flex gap-5">
-                <Box
-                  text={"Balance"}
-                  ammount={"60900"}
-                  data={"11.4% less then last month"}
-                  color={"bg-green-200"}
-                />
-                <Box
-                  text={"Spending"}
-                  ammount={"1200"}
-                  data={"11.4% less then last month"}
-                  color={"bg-lime-100"}
-                />
-              </div>
-              <div className="flex gap-5">
-                <Box
-                  text={"Portfolio"}
-                  ammount={"14200"}
-                  data={"11.4% less then last month"}
-                  color={"bg-orange-100"}
-                />
-                <Box
-                  text={"Investment"}
-                  ammount={"323900"}
-                  data={"11.4% less then last month"}
-                  color={"bg-blue-200"}
-                />
-              </div>
-            </div>
-            <div className="w-1/2 p-10 rounded-lg flex flex-col border border-x-gray-300">
-              <div className="w-full h-10">
-                <p className="text-2xl font-semibold -mt-8">Sales Report</p>
-              </div>
-              {/* Set a fixed height for the Sales Report container */}
-              <div style={{ height: "250px" }} className="-mt-5">
-                <Seles_Report />
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-[#f5f3ef] text-gray-900">
 
-          <div className="flex gap-5">
-            <div className=" w-1/4 h-[400px] rounded-lg  border border-gray-300 p-2">
-              <div className="w-full h-10 flex items-center justify-center">
-                <p className="text-2xl font-semibold">Sales Report</p>
-              </div>
-              <div className="w-full h-full -mt-16">
-                <OrderGraph />
-              </div>
-              <div className="w-full h-auto flex flex-wrap items-center justify-center gap-3 -mt-14 p-1 rounded-lg  border border-gray-300">
-                {/* <OrderGraph /> */}
-                <div className="flex items-center gap-1 w-5/12">
-                  <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-                  <p className="text-xs">Order Complete</p>
-                </div>
-                <div className="flex items-center gap-1 w-5/12">
-                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                  <p className="text-xs">Order Pending</p>
-                </div>
-                <div className="flex items-center gap-1 w-5/12">
-                  <div className="w-3 h-3 rounded-full bg-orange-400"></div>
-                  <p className="text-xs">Order Unpaid</p>
-                </div>
-                <div className="flex items-center gap-1 w-5/12">
-                  <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                  <p className="text-xs">Order Canceled</p>
-                </div>
-                <div className="flex items-center gap-1 w-5/12">
-                  <div className="w-3 h-3 rounded-full bg-red-600"></div>
-                  <p className="text-xs">Order Returned</p>
-                </div>
-              </div>
-            </div>
-            <div className="text w-3/4  rounded-lg border border-gray-300 p-4">
-              <p className="text-2xl font-semibold mb-2">
-                New Orders
-              </p>
-              <div className="p-2 flex flex-col gap-4">
-                <New_order/>
-              </div>
-            </div>
-          </div>
+      <div className="flex min-h-screen w-full">
 
-          <div className="flex  justify-between gap-7 w-full h-max">
-            {/* top product */}
-            <div className="p-5 w-3/4 flex flex-col bg-gray-200 border border-gray-300 rounded-lg">
-              <p className="text-2xl font-semibold mb-2">
-                Top Products
-              </p>
-              <div className="p-2 flex flex-col gap-4">
-                <Top_Products />
+        {/* Sidebar */}
+        <Sidebar />
+
+        {/* Main */}
+        <main className="min-w-0 flex-1">
+
+          {/* =====================================================
+              HEADER
+          ====================================================== */}
+          <header className="border-b border-[#e5dfd6] bg-[#faf9f7]">
+
+            <div className="mx-auto max-w-[1550px] px-5 py-6 sm:px-7 lg:px-10">
+
+              <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
+
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-amber-800">
+                    Administration
+                  </p>
+
+                  <h1 className="mt-2 text-3xl font-semibold tracking-tight text-gray-900 sm:text-4xl">
+                    Welcome Back
+                  </h1>
+
+                  <p className="mt-2 text-sm text-gray-500">
+                    Here's what's happening with your Vanam store today.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => navigate("/admin/products")}
+                  className="
+                    inline-flex
+                    w-fit
+                    items-center
+                    gap-2
+                    rounded-full
+                    bg-[#211c17]
+                    px-5
+                    py-2.5
+                    text-sm
+                    font-semibold
+                    text-white
+                    shadow-sm
+                    transition
+                    hover:bg-amber-900
+                    hover:shadow-lg
+                  "
+                >
+                  Manage Products
+                  <FiArrowRight />
+                </button>
+
               </div>
+
             </div>
 
-            <div className="flex flex-col p-5 gap-5 bg-gray-200 border border-gray-300 rounded-lg w-2/5">
-              <p className="text-2xl font-semibold mb-2">
-                New Customers
-              </p>
-              <div className="p-2 flex flex-col gap-4">
-                
-                <New_customers />
-              </div>
+          </header>
+
+
+          {/* =====================================================
+              DASHBOARD CONTENT
+          ====================================================== */}
+          <section className="mx-auto max-w-[1550px] px-5 py-6 sm:px-7 lg:px-10 lg:py-8">
+
+            {/* =================================================
+                KPI CARDS
+            ================================================== */}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+              <Box
+                text="Total Balance"
+                amount="60,900"
+                data="11.4% less than last month"
+                icon={<FiDollarSign />}
+                trend="down"
+              />
+
+              <Box
+                text="Total Spending"
+                amount="1,200"
+                data="8.2% less than last month"
+                icon={<FiShoppingCart />}
+                trend="down"
+              />
+
+              <Box
+                text="Portfolio"
+                amount="14,200"
+                data="6.8% higher than last month"
+                icon={<FiPackage />}
+                trend="up"
+              />
+
+              <Box
+                text="Customers"
+                amount="3,239"
+                data="12.4% higher than last month"
+                icon={<FiUsers />}
+                trend="up"
+              />
+
             </div>
-          </div>
-        </div>
+
+
+            {/* =================================================
+                SALES OVERVIEW + ORDER STATUS
+            ================================================== */}
+            <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.7fr_0.8fr]">
+
+              {/* Sales overview */}
+              <section className="rounded-[1.5rem] border border-[#e5dfd6] bg-white p-5 shadow-sm sm:p-6">
+
+                <div className="flex items-start justify-between">
+
+                  <div>
+
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-800">
+                      Performance
+                    </p>
+
+                    <h2 className="mt-1 text-xl font-semibold text-gray-900">
+                      Sales Overview
+                    </h2>
+
+                    <p className="mt-1 text-xs text-gray-400">
+                      Sales activity across your main channels.
+                    </p>
+
+                  </div>
+
+                  <span className="rounded-full bg-green-50 px-3 py-1.5 text-[10px] font-semibold text-green-700">
+                    +11.4%
+                  </span>
+
+                </div>
+
+                <div className="mt-5 h-[280px] sm:h-[320px]">
+                  <Seles_Report />
+                </div>
+
+              </section>
+
+
+              {/* Order status */}
+              <section className="rounded-[1.5rem] border border-[#e5dfd6] bg-white p-5 shadow-sm sm:p-6">
+
+                <div>
+
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-800">
+                    Orders
+                  </p>
+
+                  <h2 className="mt-1 text-xl font-semibold text-gray-900">
+                    Order Status
+                  </h2>
+
+                  <p className="mt-1 text-xs text-gray-400">
+                    Current order distribution.
+                  </p>
+
+                </div>
+
+                <div className="mt-3 h-[250px]">
+                  <OrderGraph />
+                </div>
+
+                <div className="mt-2 grid grid-cols-2 gap-3">
+
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <span className="h-2.5 w-2.5 rounded-full bg-amber-800" />
+                    Completed
+                  </div>
+
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <span className="h-2.5 w-2.5 rounded-full bg-green-500" />
+                    Pending
+                  </div>
+
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <span className="h-2.5 w-2.5 rounded-full bg-yellow-400" />
+                    Unpaid
+                  </div>
+
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <span className="h-2.5 w-2.5 rounded-full bg-orange-400" />
+                    Delayed
+                  </div>
+
+                  <div className="flex items-center gap-2 text-xs text-gray-500">
+                    <span className="h-2.5 w-2.5 rounded-full bg-red-500" />
+                    Canceled
+                  </div>
+
+                </div>
+
+              </section>
+
+            </div>
+
+
+            {/* =================================================
+                RECENT ORDERS
+            ================================================== */}
+            <section className="mt-6 rounded-[1.5rem] border border-[#e5dfd6] bg-white shadow-sm">
+
+              <div className="flex flex-col gap-2 border-b border-gray-100 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-800">
+                    Activity
+                  </p>
+
+                  <h2 className="mt-1 text-xl font-semibold text-gray-900">
+                    Recent Orders
+                  </h2>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => navigate("/admin/orders")}
+                  className="text-xs font-semibold text-amber-900 transition hover:text-amber-700"
+                >
+                  View All →
+                </button>
+
+              </div>
+
+              <div className="overflow-x-auto">
+                <New_order />
+              </div>
+
+            </section>
+
+
+            {/* =================================================
+                PRODUCTS + CUSTOMERS
+            ================================================== */}
+            <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.5fr_1fr]">
+
+              {/* Top Products */}
+              <section className="rounded-[1.5rem] border border-[#e5dfd6] bg-white p-5 shadow-sm sm:p-6">
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-800">
+                      Best Performers
+                    </p>
+
+                    <h2 className="mt-1 text-xl font-semibold text-gray-900">
+                      Top Products
+                    </h2>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => navigate("/admin/products")}
+                    className="text-xs font-semibold text-amber-900 hover:text-amber-700"
+                  >
+                    View All →
+                  </button>
+
+                </div>
+
+                <div className="mt-5 space-y-3">
+                  <Top_Products />
+                </div>
+
+              </section>
+
+
+              {/* New Customers */}
+              <section className="rounded-[1.5rem] border border-[#e5dfd6] bg-white p-5 shadow-sm sm:p-6">
+
+                <div className="flex items-center justify-between">
+
+                  <div>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-amber-800">
+                      Customers
+                    </p>
+
+                    <h2 className="mt-1 text-xl font-semibold text-gray-900">
+                      New Customers
+                    </h2>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => navigate("/admin/users")}
+                    className="text-xs font-semibold text-amber-900 hover:text-amber-700"
+                  >
+                    View All →
+                  </button>
+
+                </div>
+
+                <div className="mt-5 space-y-4">
+                  <New_customers />
+                </div>
+
+              </section>
+
+            </div>
+
+          </section>
+
+        </main>
+
       </div>
+
     </div>
   );
 }
