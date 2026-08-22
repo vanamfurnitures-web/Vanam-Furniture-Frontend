@@ -54,6 +54,11 @@ export default function Shop() {
       name: "3D Models/Miniatures",
       // icon: <FaUserAlt />,
     },
+    {
+      path: "/shop",
+      name: "Devghar",
+      // icon: <FaUserAlt />,
+    },
   ];
 
   const sortBY = (e) => {

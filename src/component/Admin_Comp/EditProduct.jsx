@@ -47,7 +47,8 @@ export default function EditProduct({
     { value: "Closet", label: "Closet" },
     { value: "Sofa", label: "Sofa" },
     { value: "Kitchen", label: "Kitchen" },
-    { value: "3D Models/Miniatures", label: "3D Models/Miniatures" }
+    { value: "3D Models/Miniatures", label: "3D Models/Miniatures" },
+    { value: "Devghar", label: "Devghar" }
   ];
 
   /* =========================================================

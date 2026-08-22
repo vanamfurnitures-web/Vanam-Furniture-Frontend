@@ -39,6 +39,10 @@ export default function Category() {
       name: "3D Models/Miniatures",
       src: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=85",
     },
+    {
+      name: "Devghar",
+      src: "https://images.unsplash.com/photo-1582510003544-4d00b7f74220?auto=format&fit=crop&w=1200&q=85",
+    },
   ];
 
   const shop_route = (e) => {
