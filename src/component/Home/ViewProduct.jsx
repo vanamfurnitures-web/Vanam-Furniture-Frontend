@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useStateValue } from "../../context/StateProvider";
 import { actionType } from "../../context/reducer";
 import Add_To_Cart from "../Shop/Add_To_Cart";
+import PriceNotice from "./PriceNotice";
 
 export default function ViewProduct({ visible, data, onClose }) {
   // for add to cart item
@@ -145,15 +146,27 @@ return (
 
             {/* Price */}
             <div className="mt-7">
-              <div className="flex flex-wrap items-end gap-3">
+              {data.sale !== "" && data.sale != null ? (
+                <div className="flex flex-wrap items-end gap-3">
+                  <span className="text-3xl font-bold text-gray-900">
+                    ₹ {data.sale}
+                  </span>
+                  {data.price !== "" && data.price != null && (
+                    <span className="pb-1 text-lg text-gray-400 line-through">
+                      ₹ {data.price}
+                    </span>
+                  )}
+                </div>
+              ) : data.price !== "" && data.price != null ? (
                 <span className="text-3xl font-bold text-gray-900">
-                  ₹ {data.sale}
-                </span>
-
-                <span className="pb-1 text-lg text-gray-400 line-through">
                   ₹ {data.price}
                 </span>
-              </div>
+              ) : (
+                <span className="text-lg text-gray-500">
+                  Price unavailable
+                </span>
+              )}
+              <PriceNotice category={data.category} />
             </div>
 
             {/* Stock */}

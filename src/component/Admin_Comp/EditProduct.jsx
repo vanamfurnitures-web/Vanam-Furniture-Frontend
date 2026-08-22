@@ -24,8 +24,8 @@ export default function EditProduct({
 
   const {
     item_name = "",
-    sale = 0,
-    price = 0,
+    sale = "",
+    price = "",
     category = "",
     image = null,
     quantity = 1,
@@ -46,7 +46,8 @@ export default function EditProduct({
     { value: "Bed", label: "Bed" },
     { value: "Closet", label: "Closet" },
     { value: "Sofa", label: "Sofa" },
-    { value: "Kitchen", label: "Kitchen" }
+    { value: "Kitchen", label: "Kitchen" },
+    { value: "3D Models/Miniatures", label: "3D Models/Miniatures" }
   ];
 
   /* =========================================================
@@ -167,7 +168,11 @@ async function uploadImage(e) {
       return;
     }
 
-    if (Number(sale) > Number(price)) {
+    if (
+      sale !== "" &&
+      price !== "" &&
+      Number(sale) > Number(price)
+    ) {
       toast.error(
         "Selling price should be lower than the regular price"
       );
@@ -583,7 +588,7 @@ async function uploadImage(e) {
                             id="price"
                             value={price}
                             onChange={onChange}
-                            required
+                            min="0"
                             className="
                               w-full
                               bg-transparent
@@ -620,6 +625,7 @@ async function uploadImage(e) {
                             id="sale"
                             value={sale}
                             onChange={onChange}
+                            min="0"
                             className="
                               w-full
                               bg-transparent

@@ -431,8 +431,10 @@ export default function All_Products() {
 
                       {data.map((item) => {
 
-                        const salePrice = Number(item?.sale || 0);
-                        const regularPrice = Number(item?.price || 0);
+                        const salePrice = item?.sale ?? "";
+                        const regularPrice = item?.price ?? "";
+                        const hasSalePrice = salePrice !== "";
+                        const hasRegularPrice = regularPrice !== "";
                         const quantityValue = Number(
                           item?.quantity || 0
                         );
@@ -498,7 +500,7 @@ export default function All_Products() {
                             <td className="px-6 py-5">
 
                               <span className="text-sm font-semibold text-amber-900">
-                                ₹ {salePrice}
+                                {hasSalePrice ? `₹ ${salePrice}` : "—"}
                               </span>
 
                             </td>
@@ -509,13 +511,14 @@ export default function All_Products() {
 
                               <span
                                 className={
-                                  salePrice > 0 &&
-                                  salePrice < regularPrice
+                                  hasSalePrice &&
+                                  hasRegularPrice &&
+                                  Number(salePrice) < Number(regularPrice)
                                     ? "text-sm text-gray-500 line-through"
                                     : "text-sm text-gray-500"
                                 }
                               >
-                                ₹ {regularPrice}
+                                {hasRegularPrice ? `₹ ${regularPrice}` : "—"}
                               </span>
 
                             </td>

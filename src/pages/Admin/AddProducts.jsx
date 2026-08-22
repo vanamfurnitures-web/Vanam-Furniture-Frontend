@@ -21,8 +21,8 @@ export default function AddProducts() {
   // const [gal_3_imgURL, setGal_3_ImgURL] = useState(null);
   let [formData, setFormData] = useState({
     item_name: "",
-    sale: 0,
-    price: 0,
+    sale: "",
+    price: "",
     category: "",
     quantity: 1,
     cartORadd: "cart",
@@ -52,7 +52,8 @@ export default function AddProducts() {
     { value: "Bed", label: "Bed" },
     { value: "Closet", label: "Closet" },
     { value: "Sofa", label: "Sofa" },
-    { value: "Kitchen", label: "Kitchen" }
+    { value: "Kitchen", label: "Kitchen" },
+    { value: "3D Models/Miniatures", label: "3D Models/Miniatures" }
   ];
   const [catego, setCatego] = useState(null);
 
@@ -167,9 +168,15 @@ const categoryChange = (value) => {
       toast.error("You have to choose featured image!");
     } else {
       try {
+        const productData = Object.fromEntries(
+          Object.entries(formData).filter(
+            ([key, value]) =>
+              !["price", "sale"].includes(key) || value !== ""
+          )
+        );
         const response = await axios.post(
           `${import.meta.env.VITE_LINK}/products`,
-          formData
+          productData
         );
         console.log(response.data.product);
         // setData(response.data.product);
@@ -182,8 +189,8 @@ const categoryChange = (value) => {
         setFormData((prevState) => ({
           ...prevState,
           item_name: "",
-          sale: 0,
-          price: 0,
+          sale: "",
+          price: "",
           category: "",
           quantity: 1,
           cartORadd: "cart",
@@ -586,7 +593,7 @@ return (
                             id="price"
                             value={price}
                             onChange={onChange}
-                            required
+                            min="0"
                             className="
                               w-full
                               bg-transparent
@@ -623,6 +630,7 @@ return (
                             id="sale"
                             value={sale}
                             onChange={onChange}
+                            min="0"
                             className="
                               w-full
                               bg-transparent

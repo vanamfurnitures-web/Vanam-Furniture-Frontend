@@ -136,6 +136,11 @@ export default function Header() {
       name: "Kitchen",
       icon: <FaUserAlt />,
     },
+    {
+      path: "/shop",
+      name: "3D Models/Miniatures",
+      icon: <FaUserAlt />,
+    },
   ]; 
 
 
@@ -715,18 +720,6 @@ export default function Header() {
                     Login
                   </button>
 
-                  {login_pop && (
-                    <Login_popup
-                      onClosing_log_pop={
-                        onClosing_log_pop
-                      }
-                      signUp_from_login_pop={
-                        signUp_from_login_pop
-                      }
-                    />
-                  )}
-
-
                   {/* Sign In */}
                   <button
                     type="button"
@@ -753,17 +746,6 @@ export default function Header() {
                   >
                     Sign In
                   </button>
-
-                  {signup_pop && (
-                    <SignUp_popup
-                      onClosing_Signup_pop={
-                        onClosing_Signup_pop
-                      }
-                      login_from_signup_pop={
-                        login_from_signup_pop
-                      }
-                    />
-                  )}
 
                 </div>
 
@@ -1335,6 +1317,20 @@ export default function Header() {
         )}
 
       </div>
+
+      {login_pop && (
+        <Login_popup
+          onClosing_log_pop={onClosing_log_pop}
+          signUp_from_login_pop={signUp_from_login_pop}
+        />
+      )}
+
+      {signup_pop && (
+        <SignUp_popup
+          onClosing_Signup_pop={onClosing_Signup_pop}
+          login_from_signup_pop={login_from_signup_pop}
+        />
+      )}
 
     </header>
   );

@@ -84,6 +84,8 @@ return (
                   "Bed",
                   "Table",
                   "Closet",
+                  "Kitchen",
+                  "3D Models/Miniatures",
                 ].map((item) => (
                   <li
                     key={item}

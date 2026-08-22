@@ -92,7 +92,11 @@ export default function Top_Products() {
           <div className="text-right">
 
             <p className="text-sm font-semibold text-gray-900">
-              ₹ {item?.price ?? 0}
+              {item?.sale !== "" && item?.sale != null
+                ? `₹ ${item.sale}`
+                : item?.price !== "" && item?.price != null
+                  ? `₹ ${item.price}`
+                  : "Price unavailable"}
             </p>
 
             <p className="mt-1 text-[10px] text-gray-400">

@@ -49,6 +49,11 @@ export default function Shop() {
       name: "Kitchen",
       // icon: <FaUserAlt />,
     },
+    {
+      path: "/shop",
+      name: "3D Models/Miniatures",
+      // icon: <FaUserAlt />,
+    },
   ];
 
   const sortBY = (e) => {
@@ -66,10 +71,14 @@ export default function Shop() {
       );
     }
     if (e.target.value === "lowest") {
-      sortedCopy = sortedCopy.sort((a, b) => a.price - b.price);
+      sortedCopy = sortedCopy.sort(
+        (a, b) => (Number(a.sale || a.price) || Infinity) - (Number(b.sale || b.price) || Infinity)
+      );
     }
     if (e.target.value === "highest") {
-      sortedCopy = sortedCopy.sort((a, b) => b.price - a.price);
+      sortedCopy = sortedCopy.sort(
+        (a, b) => (Number(b.sale || b.price) || -Infinity) - (Number(a.sale || a.price) || -Infinity)
+      );
     }
     setData(sortedCopy)
   };
@@ -115,7 +124,14 @@ export default function Shop() {
       console.log(data);
       console.log(activeCatagory);
       updata = product.filter((item) => item.category === activeCatagory);
-      updata = updata.filter((item) => parseFloat(item.price) <= price);
+      updata = updata.filter(
+        (item) =>
+          item.sale === "" ||
+          item.sale == null ||
+          item.price === "" ||
+          item.price == null ||
+          Number(item.sale || item.price) <= Number(price)
+      );
     }
     if(activeCatagory === "All")
     {
@@ -123,7 +139,14 @@ export default function Shop() {
 
       console.log(data);
       updata = product
-      updata = updata.filter((item) => parseFloat(item.price) <= price);
+      updata = updata.filter(
+        (item) =>
+          item.sale === "" ||
+          item.sale == null ||
+          item.price === "" ||
+          item.price == null ||
+          Number(item.sale || item.price) <= Number(price)
+      );
 
     }
     console.log(updata);

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useStateValue } from "../../context/StateProvider";
 import { actionType } from "../../context/reducer";
 import ViewProduct from "./ViewProduct";
+import PriceNotice from "./PriceNotice";
 import { MdFavorite } from "react-icons/md";
 import { fetchFavorite } from "../../utils/fetchLocalStorageData";
 
@@ -575,11 +576,13 @@ export default function ProductContainer({ data, grid = "grid", updateDATA }) {
                 {/* Price */}
                 <div className="flex flex-col">
 
-                  {item?.sale ? (
+                  {item?.sale !== "" && item?.sale != null ? (
                     <>
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-400 line-through">
-                          ${item?.price}
+                          {item?.price !== "" && item?.price != null
+                            ? `₹${item.price}`
+                            : "Price unavailable"}
                         </span>
 
                         <span
@@ -589,7 +592,7 @@ export default function ProductContainer({ data, grid = "grid", updateDATA }) {
                             text-gray-900
                           "
                         >
-                          ${item?.sale}
+                          ₹{item.sale}
                         </span>
                       </div>
 
@@ -599,9 +602,13 @@ export default function ProductContainer({ data, grid = "grid", updateDATA }) {
                     </>
                   ) : (
                     <span className="text-xl font-bold text-gray-900">
-                      ${item?.price}
+                      {item?.price !== "" && item?.price != null
+                        ? `₹${item.price}`
+                        : "Price unavailable"}
                     </span>
                   )}
+
+                  <PriceNotice category={item?.category} />
 
                 </div>
 
@@ -789,23 +796,29 @@ export default function ProductContainer({ data, grid = "grid", updateDATA }) {
               <div className="flex items-center justify-between mt-3">
 
                 <div>
-                  {item?.sale ? (
+                  {item?.sale !== "" && item?.sale != null ? (
                     <div className="flex flex-col">
 
                       <span className="text-[11px] text-gray-400 line-through">
-                        ${item?.price}
+                        {item?.price !== "" && item?.price != null
+                          ? `₹${item.price}`
+                          : "Price unavailable"}
                       </span>
 
                       <span className="text-base font-bold text-gray-900">
-                        ${item?.sale}
+                        ₹{item.sale}
                       </span>
 
                     </div>
                   ) : (
                     <span className="text-base font-bold text-gray-900">
-                      ${item?.price}
+                      {item?.price !== "" && item?.price != null
+                        ? `₹${item.price}`
+                        : "Price unavailable"}
                     </span>
                   )}
+
+                  <PriceNotice category={item?.category} />
                 </div>
 
                 {/* Cart */}

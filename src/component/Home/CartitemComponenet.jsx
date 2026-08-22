@@ -17,6 +17,11 @@ export default function CartitemComponenet({
   const [{ cartItems, favorite_Items }, dispatch] = useStateValue();
 
   const [isOpen, setIsOpen] = useState(true);
+  const itemPrice = item?.sale !== "" && item?.sale != null
+    ? item.sale
+    : item?.price;
+  const numericItemPrice = Number(itemPrice);
+  const hasPrice = itemPrice !== "" && itemPrice != null && Number.isFinite(numericItemPrice);
 
   const cartDispatch = (updatedItem) => {
     localStorage.removeItem("cartItems");
@@ -80,7 +85,12 @@ export default function CartitemComponenet({
     // Calculate total price
     setQuantity(item.purchase_quantity);
     let totalpr = cartItems.reduce(
-      (accum, item) => accum + item.purchase_quantity * item.price,
+      (accum, cartItem) => {
+        const price = cartItem?.sale !== "" && cartItem?.sale != null
+          ? Number(cartItem.sale)
+          : Number(cartItem?.price);
+        return accum + (Number.isFinite(price) ? cartItem.purchase_quantity * price : 0);
+      },
       0
     );
     setiingTotal(totalpr);
@@ -129,7 +139,7 @@ return (
         {/* ================= PRICE ================= */}
         <td className="px-6 py-5 border-b border-gray-100">
           <p className="text-sm font-medium text-gray-800">
-            ₹ {item.price}
+            {hasPrice ? `₹ ${itemPrice}` : "Price unavailable"}
           </p>
         </td>
 
@@ -221,7 +231,9 @@ return (
         <td className="px-6 py-5 border-b border-gray-100">
 
           <p className="text-sm font-semibold text-gray-900">
-            ₹ {item.price * item.purchase_quantity}
+            {hasPrice
+              ? `₹ ${numericItemPrice * item.purchase_quantity}`
+              : "Price unavailable"}
           </p>
 
         </td>
@@ -335,7 +347,7 @@ return (
 
             {/* Price */}
             <p className="text-sm font-semibold text-amber-900 mt-1">
-              ₹ {parseFloat(item?.price)}
+              {hasPrice ? `₹ ${itemPrice}` : "Price unavailable"}
             </p>
 
 
@@ -422,9 +434,9 @@ return (
 
               {/* Item total */}
               <p className="text-sm font-semibold text-gray-900">
-                ₹{" "}
-                {parseFloat(item?.price) *
-                  item?.purchase_quantity}
+                {hasPrice
+                  ? `₹ ${numericItemPrice * item.purchase_quantity}`
+                  : "Price unavailable"}
               </p>
 
             </div>

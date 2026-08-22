@@ -35,6 +35,10 @@ export default function Category() {
   name: "Kitchen",
   src: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1200&q=85",
 },
+    {
+      name: "3D Models/Miniatures",
+      src: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=85",
+    },
   ];
 
   const shop_route = (e) => {

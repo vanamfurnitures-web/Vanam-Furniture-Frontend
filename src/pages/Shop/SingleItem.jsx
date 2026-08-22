@@ -7,6 +7,7 @@ import axios from "axios";
 import Review from "../../component/Home/Review";
 import { actionType } from "../../context/reducer";
 import Add_To_Cart from "../../component/Shop/Add_To_Cart";
+import PriceNotice from "../../component/Home/PriceNotice";
 
 export default function SingleItem() {
   const [{product, cartShow, cartItems, user }, dispatch] = useStateValue();
@@ -217,14 +218,26 @@ return (
 
             {/* Price */}
             <div className="mt-6 flex flex-wrap items-end gap-3">
-              <p className="text-3xl font-bold text-gray-900">
-                ₹ {singleData.sale}
-              </p>
-
-              <p className="pb-1 text-lg text-gray-400 line-through">
-                ₹ {singleData.price}
-              </p>
+              {singleData.sale !== "" && singleData.sale != null ? (
+                <>
+                  <p className="text-3xl font-bold text-gray-900">
+                    ₹ {singleData.sale}
+                  </p>
+                  {singleData.price !== "" && singleData.price != null && (
+                    <p className="pb-1 text-lg text-gray-400 line-through">
+                      ₹ {singleData.price}
+                    </p>
+                  )}
+                </>
+              ) : singleData.price !== "" && singleData.price != null ? (
+                <p className="text-3xl font-bold text-gray-900">
+                  ₹ {singleData.price}
+                </p>
+              ) : (
+                <p className="text-lg text-gray-500">Price unavailable</p>
+              )}
             </div>
+            <PriceNotice category={singleData.category} />
 
             {/* Stock */}
             <div className="mt-4 flex items-center gap-2">
